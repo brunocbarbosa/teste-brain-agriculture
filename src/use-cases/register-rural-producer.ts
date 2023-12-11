@@ -1,6 +1,12 @@
 import { RuralProducerRepository } from '@/repositories/rural-producer-repository'
-import { RuralProducer } from '@/utils/rural-producer'
+import { RuralProducer } from '@/utils/types/rural-producer'
 import { RuralProducerAlreadyExistsError } from './errors/rural-producer-already-exists-error'
+import {
+  agriculturalAndVegetationAreasSum,
+  checkCpfAndCnpjIsValid,
+} from '@/utils/functions'
+import { CpfOrCnpjIsNotValidError } from './errors/cpf-or-cnpj-is-not-valid-error'
+import { TotalAreaError } from './errors/total-area-error'
 
 interface registerRuralProducerUseCaseRequest {
   cpfOrCnpj: string
@@ -37,6 +43,17 @@ export class RegisterRuralProducerUseCase {
 
     if (producerWithTheSameCpfOrCnpj)
       throw new RuralProducerAlreadyExistsError()
+
+    if (!checkCpfAndCnpjIsValid(cpfOrCnpj)) throw new CpfOrCnpjIsNotValidError()
+
+    if (
+      !agriculturalAndVegetationAreasSum(
+        agriculturalArea,
+        vegetationArea,
+        totalArea,
+      )
+    )
+      throw new TotalAreaError()
 
     const ruralProducer = await this.ruralProducerRepository.create({
       cpfOrCnpj,

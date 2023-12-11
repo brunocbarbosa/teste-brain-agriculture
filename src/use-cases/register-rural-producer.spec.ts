@@ -2,6 +2,8 @@ import { InMemoryRuralProducerRepositry } from '@/repositories/in-memory/in-memo
 import { beforeEach, describe, expect, it } from 'vitest'
 import { RegisterRuralProducerUseCase } from './register-rural-producer'
 import { RuralProducerAlreadyExistsError } from './errors/rural-producer-already-exists-error'
+import { CpfOrCnpjIsNotValidError } from './errors/cpf-or-cnpj-is-not-valid-error'
+import { TotalAreaError } from './errors/total-area-error'
 
 let ruralProducer: InMemoryRuralProducerRepositry
 let sut: RegisterRuralProducerUseCase
@@ -16,7 +18,7 @@ describe('Register Rural Use Case', () => {
     const plantedCropsArray = ['Soja', 'Milho']
 
     const { ruralProducer } = await sut.execute({
-      cpfOrCnpj: '02136548965',
+      cpfOrCnpj: '21859242570',
       producerName: 'Thomas',
       farmName: 'Fazendinha',
       city: 'Congonhal',
@@ -34,7 +36,7 @@ describe('Register Rural Use Case', () => {
     const plantedCropsArray = ['Soja', 'Milho']
 
     await sut.execute({
-      cpfOrCnpj: '02136548965',
+      cpfOrCnpj: '21859242570',
       producerName: 'Thomas',
       farmName: 'Fazendinha',
       city: 'Congonhal',
@@ -47,7 +49,7 @@ describe('Register Rural Use Case', () => {
 
     await expect(() =>
       sut.execute({
-        cpfOrCnpj: '02136548965',
+        cpfOrCnpj: '21859242570',
         producerName: 'Thomas',
         farmName: 'Fazendinha',
         city: 'Congonhal',
@@ -58,5 +60,41 @@ describe('Register Rural Use Case', () => {
         plantedCrops: plantedCropsArray,
       }),
     ).rejects.toBeInstanceOf(RuralProducerAlreadyExistsError)
+  })
+
+  it('should not be able to register with invalid CPF or CNPJ', async () => {
+    const plantedCropsArray = ['Soja', 'Milho']
+
+    await expect(() =>
+      sut.execute({
+        cpfOrCnpj: '2185924257025',
+        producerName: 'Thomas',
+        farmName: 'Fazendinha',
+        city: 'Congonhal',
+        state: 'MG',
+        totalArea: 4000,
+        agriculturalArea: 1500,
+        vegetationArea: 1500,
+        plantedCrops: plantedCropsArray,
+      }),
+    ).rejects.toBeInstanceOf(CpfOrCnpjIsNotValidError)
+  })
+
+  it('should not be able to register if the sum of agricultural and vegetation is bigger than total area', async () => {
+    const plantedCropsArray = ['Soja', 'Milho']
+
+    await expect(() =>
+      sut.execute({
+        cpfOrCnpj: '21859242570',
+        producerName: 'Thomas',
+        farmName: 'Fazendinha',
+        city: 'Congonhal',
+        state: 'MG',
+        totalArea: 2000,
+        agriculturalArea: 1500,
+        vegetationArea: 1500,
+        plantedCrops: plantedCropsArray,
+      }),
+    ).rejects.toBeInstanceOf(TotalAreaError)
   })
 })
