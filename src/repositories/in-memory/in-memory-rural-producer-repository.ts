@@ -59,4 +59,14 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
 
     return ruralProducer
   }
+
+  async delete(data: RuralProducer) {
+    const itemIndex = this.items.findIndex((item) => item.id === data.id)
+    const plantedCropsItemIndex = this.plantedCropsItems.findIndex(
+      (item) => item.ruralProducerId === data.id,
+    )
+
+    this.plantedCropsItems.splice(plantedCropsItemIndex, 1)
+    this.items.splice(itemIndex, 1)
+  }
 }

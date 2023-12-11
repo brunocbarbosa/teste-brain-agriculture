@@ -5,4 +5,5 @@ export interface RuralProducerRepository {
   findByCpfOrCnpj(cpfOrCnpj: string): Promise<RuralProducer | null>
   save(data: RuralProducer): Promise<void>
   create(data: RuralProducer): Promise<RuralProducer>
+  delete(data: RuralProducer): Promise<void>
 }

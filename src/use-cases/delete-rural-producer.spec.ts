@@ -1,18 +1,18 @@
 import { InMemoryRuralProducerRepositry } from '@/repositories/in-memory/in-memory-rural-producer-repository'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { EditRuralProducerUseCase } from './edit-rural-producer'
+import { DeleteRuralProducerUseCase } from './delete-rural-producer'
 import { RuralProducerNotFoundError } from './errors/rural-producer-not-found-error'
 
 let ruralProducerRepository: InMemoryRuralProducerRepositry
-let sut: EditRuralProducerUseCase
+let sut: DeleteRuralProducerUseCase
 
-describe('Edit Rural Use Case', () => {
+describe('Edit Rural Producer Use Case', () => {
   beforeEach(() => {
     ruralProducerRepository = new InMemoryRuralProducerRepositry()
-    sut = new EditRuralProducerUseCase(ruralProducerRepository)
+    sut = new DeleteRuralProducerUseCase(ruralProducerRepository)
   })
 
-  it('should be able to Edit', async () => {
+  it('should be able to delete', async () => {
     const plantedCropsArray = ['Soja', 'Milho']
 
     const ruralProducer = await ruralProducerRepository.create({
@@ -29,17 +29,13 @@ describe('Edit Rural Use Case', () => {
 
     await sut.execute({
       ruralProducerId: ruralProducer.id,
-      producerName: 'José',
-      farmName: 'Fazendona',
     })
 
-    expect(ruralProducerRepository.items[0]).toMatchObject({
-      producerName: 'José',
-      farmName: 'Fazendona',
-    })
+    expect(ruralProducerRepository.items).toHaveLength(0)
+    expect(ruralProducerRepository.plantedCropsItems).toHaveLength(0)
   })
 
-  it('should not be able to edit if not found rural producer', async () => {
+  it('should not be able to delete if not found rural producer', async () => {
     const plantedCropsArray = ['Soja', 'Milho']
 
     const ruralProducer = await ruralProducerRepository.create({
