@@ -1,3 +1,5 @@
+import { PlantedCropsEnum } from '../planted-crops-enum'
+
 export type RuralProducer = {
   id?: string
   cpfOrCnpj: string
@@ -8,5 +10,5 @@ export type RuralProducer = {
   totalArea: number
   agriculturalArea: number
   vegetationArea: number
-  plantedCrops: string[]
+  plantedCrops: PlantedCropsEnum[]
 }

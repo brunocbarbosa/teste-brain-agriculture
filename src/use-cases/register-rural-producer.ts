@@ -7,6 +7,7 @@ import {
 } from '@/utils/functions'
 import { CpfOrCnpjIsNotValidError } from './errors/cpf-or-cnpj-is-not-valid-error'
 import { TotalAreaError } from './errors/total-area-error'
+import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 
 interface registerRuralProducerUseCaseRequest {
   cpfOrCnpj: string
@@ -17,7 +18,7 @@ interface registerRuralProducerUseCaseRequest {
   totalArea: number
   agriculturalArea: number
   vegetationArea: number
-  plantedCrops: string[]
+  plantedCrops: PlantedCropsEnum[]
 }
 
 interface registerRuralProducerUseCaseResponse {

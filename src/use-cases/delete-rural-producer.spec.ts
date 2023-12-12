@@ -2,6 +2,7 @@ import { InMemoryRuralProducerRepositry } from '@/repositories/in-memory/in-memo
 import { beforeEach, describe, expect, it } from 'vitest'
 import { DeleteRuralProducerUseCase } from './delete-rural-producer'
 import { RuralProducerNotFoundError } from './errors/rural-producer-not-found-error'
+import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 
 let ruralProducerRepository: InMemoryRuralProducerRepositry
 let sut: DeleteRuralProducerUseCase
@@ -13,7 +14,7 @@ describe('Edit Rural Producer Use Case', () => {
   })
 
   it('should be able to delete', async () => {
-    const plantedCropsArray = ['Soja', 'Milho']
+    const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
 
     const ruralProducer = await ruralProducerRepository.create({
       cpfOrCnpj: '21859242570',
@@ -36,7 +37,7 @@ describe('Edit Rural Producer Use Case', () => {
   })
 
   it('should not be able to delete if not found rural producer', async () => {
-    const plantedCropsArray = ['Soja', 'Milho']
+    const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
 
     const ruralProducer = await ruralProducerRepository.create({
       cpfOrCnpj: '21859242570',
