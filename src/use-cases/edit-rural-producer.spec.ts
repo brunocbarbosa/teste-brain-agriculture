@@ -16,20 +16,22 @@ describe('Edit Rural Use Case', () => {
   it('should be able to Edit', async () => {
     const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
 
-    const ruralProducer = await ruralProducerRepository.create({
-      cpfOrCnpj: '21859242570',
-      producerName: 'Thomas',
-      farmName: 'Fazendinha',
-      city: 'Congonhal',
-      state: 'MG',
-      totalArea: 4000,
-      agriculturalArea: 1500,
-      vegetationArea: 1500,
-      plantedCrops: plantedCropsArray,
-    })
+    const ruralProducer = await ruralProducerRepository.create(
+      {
+        cpfOrCnpj: '21859242570',
+        producerName: 'Thomas',
+        farmName: 'Fazendinha',
+        city: 'Congonhal',
+        state: 'MG',
+        totalArea: 4000,
+        agriculturalArea: 1500,
+        vegetationArea: 1500,
+      },
+      plantedCropsArray,
+    )
 
     await sut.execute({
-      ruralProducerId: ruralProducer.id,
+      ruralProducerId: ruralProducer.ruralProducerData.id,
       producerName: 'José',
       farmName: 'Fazendona',
     })
@@ -43,21 +45,23 @@ describe('Edit Rural Use Case', () => {
   it('should not be able to edit if not found rural producer', async () => {
     const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
 
-    const ruralProducer = await ruralProducerRepository.create({
-      cpfOrCnpj: '21859242570',
-      producerName: 'Thomas',
-      farmName: 'Fazendinha',
-      city: 'Congonhal',
-      state: 'MG',
-      totalArea: 4000,
-      agriculturalArea: 1500,
-      vegetationArea: 1500,
-      plantedCrops: plantedCropsArray,
-    })
+    const ruralProducer = await ruralProducerRepository.create(
+      {
+        cpfOrCnpj: '21859242570',
+        producerName: 'Thomas',
+        farmName: 'Fazendinha',
+        city: 'Congonhal',
+        state: 'MG',
+        totalArea: 4000,
+        agriculturalArea: 1500,
+        vegetationArea: 1500,
+      },
+      plantedCropsArray,
+    )
 
     await expect(() =>
       sut.execute({
-        ruralProducerId: `${ruralProducer.id}-producer`,
+        ruralProducerId: `${ruralProducer.ruralProducerData.id}-producer`,
       }),
     ).rejects.toBeInstanceOf(RuralProducerNotFoundError)
   })

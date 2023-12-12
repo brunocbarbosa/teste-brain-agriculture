@@ -18,7 +18,7 @@ describe('Register Rural Use Case', () => {
   it('should be able to register', async () => {
     const plantedCropsArray = [PlantedCropsEnum.algodao, PlantedCropsEnum.milho]
 
-    const { ruralProducer } = await sut.execute({
+    const { ruralProducerData, plantedCropsData } = await sut.execute({
       cpfOrCnpj: '21859242570',
       producerName: 'Thomas',
       farmName: 'Fazendinha',
@@ -30,7 +30,7 @@ describe('Register Rural Use Case', () => {
       plantedCrops: plantedCropsArray,
     })
 
-    expect(ruralProducer.id).toEqual(expect.any(String))
+    expect(ruralProducerData.id).toEqual(expect.any(String))
   })
 
   it('should not be able to register with same cpf or cnpj', async () => {

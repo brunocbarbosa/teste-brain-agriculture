@@ -8,6 +8,7 @@ import {
 import { CpfOrCnpjIsNotValidError } from './errors/cpf-or-cnpj-is-not-valid-error'
 import { TotalAreaError } from './errors/total-area-error'
 import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
+import { PlantedCrops } from '@/utils/types/planted-crops'
 
 interface registerRuralProducerUseCaseRequest {
   cpfOrCnpj: string
@@ -22,7 +23,8 @@ interface registerRuralProducerUseCaseRequest {
 }
 
 interface registerRuralProducerUseCaseResponse {
-  ruralProducer: RuralProducer
+  ruralProducerData: RuralProducer
+  plantedCropsData: PlantedCrops[]
 }
 
 export class RegisterRuralProducerUseCase {
@@ -56,20 +58,24 @@ export class RegisterRuralProducerUseCase {
     )
       throw new TotalAreaError()
 
-    const ruralProducer = await this.ruralProducerRepository.create({
-      cpfOrCnpj,
-      producerName,
-      farmName,
-      city,
-      state,
-      totalArea,
-      agriculturalArea,
-      vegetationArea,
-      plantedCrops,
-    })
+    const { plantedCropsData, ruralProducerData } =
+      await this.ruralProducerRepository.create(
+        {
+          cpfOrCnpj,
+          producerName,
+          farmName,
+          city,
+          state,
+          totalArea,
+          agriculturalArea,
+          vegetationArea,
+        },
+        plantedCrops,
+      )
 
     return {
-      ruralProducer,
+      ruralProducerData,
+      plantedCropsData,
     }
   }
 }

@@ -2,6 +2,7 @@ import { RuralProducer } from '@/utils/types/rural-producer'
 import { RuralProducerRepository } from '../rural-producer-repository'
 import { randomUUID } from 'node:crypto'
 import { PlantedCrops } from '@/utils/types/planted-crops'
+import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 
 export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
   public items: RuralProducer[] = []
@@ -9,10 +10,20 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
 
   async findById(id: string) {
     const ruralProducer = this.items.find((item) => item.id === id)
+    const plantedCrops: PlantedCrops[] = []
 
-    if (!ruralProducer) return null
+    for (const plantedCrop of this.plantedCropsItems) {
+      if (plantedCrop.ruralProducerId === id) {
+        plantedCrops.push(plantedCrop)
+      }
+    }
 
-    return ruralProducer
+    if (!ruralProducer || !plantedCrops) return null
+
+    return {
+      ruralProducer,
+      plantedCrops,
+    }
   }
 
   async findByCpfOrCnpj(cpfOrCnpj: string) {
@@ -22,51 +33,84 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
 
     if (!ruralProducer) return null
 
-    return ruralProducer
-  }
+    const plantedCrops: PlantedCrops[] = []
 
-  async save(data: RuralProducer) {
-    const itemIndex = this.items.findIndex((item) => item.id === data.id)
-
-    this.items[itemIndex] = data
-  }
-
-  async create(data: RuralProducer) {
-    const ruralProducer = {
-      id: randomUUID(),
-      cpfOrCnpj: data.cpfOrCnpj,
-      producerName: data.producerName,
-      farmName: data.farmName,
-      city: data.city,
-      state: data.state,
-      totalArea: data.totalArea,
-      agriculturalArea: data.agriculturalArea,
-      vegetationArea: data.vegetationArea,
-      plantedCrops: data.plantedCrops,
+    for (const plantedCrop of this.plantedCropsItems) {
+      if (plantedCrop.ruralProducerId === ruralProducer.id) {
+        plantedCrops.push(plantedCrop)
+      }
     }
 
-    this.items.push(ruralProducer)
+    if (!plantedCrops) return null
 
-    // ruralProducer.plantedCrops.forEach((crop) => {
-    //   const plantedCrop = {
-    //     id: randomUUID(),
-    //     ruralProducerId: ruralProducer.id,
-    //     name: crop,
-    //   }
-
-    //   this.plantedCropsItems.push(plantedCrop)
-    // })
-
-    return ruralProducer
+    return {
+      ruralProducer,
+      plantedCrops,
+    }
   }
 
-  async delete(data: RuralProducer) {
-    const itemIndex = this.items.findIndex((item) => item.id === data.id)
-    const plantedCropsItemIndex = this.plantedCropsItems.findIndex(
-      (item) => item.ruralProducerId === data.id,
+  async save(ruralProducer: RuralProducer, plantedCrops: PlantedCrops[]) {
+    const itemIndex = this.items.findIndex(
+      (item) => item.id === ruralProducer.id,
     )
 
-    this.plantedCropsItems.splice(plantedCropsItemIndex, 1)
+    this.items[itemIndex] = ruralProducer
+
+    plantedCrops.forEach((crop) => {
+      const itemIndex = this.plantedCropsItems.findIndex(
+        (item) => item.id === crop.id,
+      )
+
+      this.plantedCropsItems[itemIndex] = crop
+    })
+  }
+
+  async create(ruralProducer: RuralProducer, plantedCrops: PlantedCropsEnum[]) {
+    const ruralProducerData = {
+      id: randomUUID(),
+      cpfOrCnpj: ruralProducer.cpfOrCnpj,
+      producerName: ruralProducer.producerName,
+      farmName: ruralProducer.farmName,
+      city: ruralProducer.city,
+      state: ruralProducer.state,
+      totalArea: ruralProducer.totalArea,
+      agriculturalArea: ruralProducer.agriculturalArea,
+      vegetationArea: ruralProducer.vegetationArea,
+    }
+
+    this.items.push(ruralProducerData)
+
+    const plantedCropsData = plantedCrops.map((crop) => {
+      const plantedCrop = {
+        id: randomUUID(),
+        ruralProducerId: ruralProducerData.id,
+        name: crop,
+      }
+
+      this.plantedCropsItems.push(plantedCrop)
+
+      return plantedCrop
+    })
+
+    return {
+      ruralProducerData,
+      plantedCropsData,
+    }
+  }
+
+  async delete(ruralProducer: RuralProducer, plantedCrops: PlantedCrops[]) {
+    const itemIndex = this.items.findIndex(
+      (item) => item.id === ruralProducer.id,
+    )
+
+    plantedCrops.forEach((crop) => {
+      const itemIndex = this.plantedCropsItems.findIndex(
+        (item) => item.id === crop.id,
+      )
+
+      this.plantedCropsItems.splice(itemIndex, 1)
+    })
+
     this.items.splice(itemIndex, 1)
   }
 }

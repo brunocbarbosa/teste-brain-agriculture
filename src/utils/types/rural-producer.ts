@@ -10,5 +10,5 @@ export type RuralProducer = {
   totalArea: number
   agriculturalArea: number
   vegetationArea: number
-  plantedCrops: PlantedCropsEnum[]
+  // plantedCrops: PlantedCropsEnum[]
 }
