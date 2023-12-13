@@ -1,7 +1,6 @@
 import { RuralProducerRepository } from '@/repositories/rural-producer-repository'
 import { RuralProducerNotFoundError } from './errors/rural-producer-not-found-error'
-import { PlantedCrops } from '@/utils/types/planted-crops'
-import { RuralProducer } from '@/utils/types/rural-producer'
+import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 
 interface editRuralProducerUseCaseRequest {
   ruralProducerId: string
@@ -13,15 +12,11 @@ interface editRuralProducerUseCaseRequest {
   totalArea?: number
   agriculturalArea?: number
   vegetationArea?: number
-  plantedCrops?: PlantedCrops[]
+  plantedCrops?: PlantedCropsEnum[]
 }
 
-interface editRuralProducerUseCaseResponse {
-  producerRural: {
-    ruralProducer: RuralProducer
-    plantedCrops: PlantedCrops[]
-  }
-}
+interface editRuralProducerUseCaseResponse {}
+
 export class EditRuralProducerUseCase {
   constructor(private ruralProducerRepository: RuralProducerRepository) {}
 
@@ -42,36 +37,20 @@ export class EditRuralProducerUseCase {
 
     if (!producerRural) throw new RuralProducerNotFoundError()
 
-    if (cpfOrCnpj !== undefined)
-      producerRural.ruralProducer.cpfOrCnpj = cpfOrCnpj
-    if (producerName !== undefined)
-      producerRural.ruralProducer.producerName = producerName
-    if (farmName !== undefined) producerRural.ruralProducer.farmName = farmName
-    if (city !== undefined) producerRural.ruralProducer.city = city
-    if (state !== undefined) producerRural.ruralProducer.state = state
-    if (totalArea !== undefined)
-      producerRural.ruralProducer.totalArea = totalArea
+    if (cpfOrCnpj !== undefined) producerRural.cpf_or_cnpj = cpfOrCnpj
+    if (producerName !== undefined) producerRural.producer_name = producerName
+    if (farmName !== undefined) producerRural.farm_name = farmName
+    if (city !== undefined) producerRural.city = city
+    if (state !== undefined) producerRural.state = state
+    if (totalArea !== undefined) producerRural.total_area = totalArea
     if (agriculturalArea !== undefined)
-      producerRural.ruralProducer.agriculturalArea = agriculturalArea
+      producerRural.agricultural_area = agriculturalArea
     if (vegetationArea !== undefined)
-      producerRural.ruralProducer.vegetationArea = vegetationArea
-    if (plantedCrops !== undefined) {
-      producerRural.plantedCrops.forEach((item) => {
-        plantedCrops.forEach((crop) => {
-          if (item.ruralProducerId === crop.ruralProducerId) {
-            item.name = crop.name
-          }
-        })
-      })
-    }
+      producerRural.vegetation_area = vegetationArea
+    if (plantedCrops !== undefined) producerRural.planted_crops = plantedCrops
 
-    await this.ruralProducerRepository.save(
-      producerRural.ruralProducer,
-      producerRural.plantedCrops,
-    )
+    await this.ruralProducerRepository.save(producerRural)
 
-    return {
-      producerRural,
-    }
+    return {}
   }
 }

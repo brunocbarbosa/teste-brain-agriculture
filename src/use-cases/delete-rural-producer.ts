@@ -18,10 +18,7 @@ export class DeleteRuralProducerUseCase {
 
     if (!producerRural) throw new RuralProducerNotFoundError()
 
-    await this.ruralProducerRepository.delete(
-      producerRural.ruralProducer,
-      producerRural.plantedCrops,
-    )
+    await this.ruralProducerRepository.delete(producerRural)
 
     return {}
   }

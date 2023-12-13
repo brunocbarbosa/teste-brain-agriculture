@@ -7,7 +7,7 @@ import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 let ruralProducerRepository: InMemoryRuralProducerRepositry
 let sut: DeleteRuralProducerUseCase
 
-describe('Delete Rural Producer Use Case', () => {
+describe('Edit Rural Producer Use Case', () => {
   beforeEach(() => {
     ruralProducerRepository = new InMemoryRuralProducerRepositry()
     sut = new DeleteRuralProducerUseCase(ruralProducerRepository)
@@ -16,22 +16,20 @@ describe('Delete Rural Producer Use Case', () => {
   it('should be able to delete', async () => {
     const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
 
-    const ruralProducer = await ruralProducerRepository.create(
-      {
-        cpfOrCnpj: '21859242570',
-        producerName: 'Thomas',
-        farmName: 'Fazendinha',
-        city: 'Congonhal',
-        state: 'MG',
-        totalArea: 4000,
-        agriculturalArea: 1500,
-        vegetationArea: 1500,
-      },
-      plantedCropsArray,
-    )
+    const ruralProducer = await ruralProducerRepository.create({
+      cpf_or_cnpj: '21859242570',
+      producer_name: 'Thomas',
+      farm_name: 'Fazendinha',
+      city: 'Congonhal',
+      state: 'MG',
+      total_area: 4000,
+      agricultural_area: 1500,
+      vegetation_area: 1500,
+      planted_crops: plantedCropsArray,
+    })
 
     await sut.execute({
-      ruralProducerId: ruralProducer.ruralProducerData.id,
+      ruralProducerId: ruralProducer.id,
     })
 
     expect(ruralProducerRepository.items).toHaveLength(0)
@@ -41,23 +39,21 @@ describe('Delete Rural Producer Use Case', () => {
   it('should not be able to delete if not found rural producer', async () => {
     const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
 
-    const ruralProducer = await ruralProducerRepository.create(
-      {
-        cpfOrCnpj: '21859242570',
-        producerName: 'Thomas',
-        farmName: 'Fazendinha',
-        city: 'Congonhal',
-        state: 'MG',
-        totalArea: 4000,
-        agriculturalArea: 1500,
-        vegetationArea: 1500,
-      },
-      plantedCropsArray,
-    )
+    const ruralProducer = await ruralProducerRepository.create({
+      cpf_or_cnpj: '21859242570',
+      producer_name: 'Thomas',
+      farm_name: 'Fazendinha',
+      city: 'Congonhal',
+      state: 'MG',
+      total_area: 4000,
+      agricultural_area: 1500,
+      vegetation_area: 1500,
+      planted_crops: plantedCropsArray,
+    })
 
     await expect(() =>
       sut.execute({
-        ruralProducerId: `${ruralProducer.ruralProducerData.id}-producer`,
+        ruralProducerId: `${ruralProducer.id}-producer`,
       }),
     ).rejects.toBeInstanceOf(RuralProducerNotFoundError)
   })

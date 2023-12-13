@@ -2,7 +2,6 @@ import { RuralProducer } from '@/utils/types/rural-producer'
 import { RuralProducerRepository } from '../rural-producer-repository'
 import { randomUUID } from 'node:crypto'
 import { PlantedCrops } from '@/utils/types/planted-crops'
-import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 
 export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
   public items: RuralProducer[] = []
@@ -10,107 +9,68 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
 
   async findById(id: string) {
     const ruralProducer = this.items.find((item) => item.id === id)
-    const plantedCrops: PlantedCrops[] = []
 
-    for (const plantedCrop of this.plantedCropsItems) {
-      if (plantedCrop.ruralProducerId === id) {
-        plantedCrops.push(plantedCrop)
-      }
-    }
+    if (!ruralProducer) return null
 
-    if (!ruralProducer || !plantedCrops) return null
-
-    return {
-      ruralProducer,
-      plantedCrops,
-    }
+    return ruralProducer
   }
 
   async findByCpfOrCnpj(cpfOrCnpj: string) {
     const ruralProducer = this.items.find(
-      (item) => item.cpfOrCnpj === cpfOrCnpj,
+      (item) => item.cpf_or_cnpj === cpfOrCnpj,
     )
 
     if (!ruralProducer) return null
 
-    const plantedCrops: PlantedCrops[] = []
-
-    for (const plantedCrop of this.plantedCropsItems) {
-      if (plantedCrop.ruralProducerId === ruralProducer.id) {
-        plantedCrops.push(plantedCrop)
-      }
-    }
-
-    if (!plantedCrops) return null
-
-    return {
-      ruralProducer,
-      plantedCrops,
-    }
+    return ruralProducer
   }
 
-  async save(ruralProducer: RuralProducer, plantedCrops: PlantedCrops[]) {
-    const itemIndex = this.items.findIndex(
-      (item) => item.id === ruralProducer.id,
-    )
+  async save(data: RuralProducer) {
+    const itemIndex = this.items.findIndex((item) => item.id === data.id)
 
-    this.items[itemIndex] = ruralProducer
+    this.items[itemIndex] = data
 
-    plantedCrops.forEach((crop) => {
-      const itemIndex = this.plantedCropsItems.findIndex(
-        (item) => item.id === crop.id,
-      )
-
-      this.plantedCropsItems[itemIndex] = crop
+    this.plantedCropsItems.forEach((item, index) => {
+      item.name = data.planted_crops[index]
     })
   }
 
-  async create(ruralProducer: RuralProducer, plantedCrops: PlantedCropsEnum[]) {
-    const ruralProducerData = {
+  async create(data: RuralProducer) {
+    const ruralProducer = {
       id: randomUUID(),
-      cpfOrCnpj: ruralProducer.cpfOrCnpj,
-      producerName: ruralProducer.producerName,
-      farmName: ruralProducer.farmName,
-      city: ruralProducer.city,
-      state: ruralProducer.state,
-      totalArea: ruralProducer.totalArea,
-      agriculturalArea: ruralProducer.agriculturalArea,
-      vegetationArea: ruralProducer.vegetationArea,
+      cpf_or_cnpj: data.cpf_or_cnpj,
+      producer_name: data.producer_name,
+      farm_name: data.farm_name,
+      city: data.city,
+      state: data.state,
+      total_area: data.total_area,
+      agricultural_area: data.agricultural_area,
+      vegetation_area: data.vegetation_area,
+      planted_crops: data.planted_crops,
     }
 
-    this.items.push(ruralProducerData)
+    this.items.push(ruralProducer)
 
-    const plantedCropsData = plantedCrops.map((crop) => {
+    ruralProducer.planted_crops.forEach((crop) => {
       const plantedCrop = {
         id: randomUUID(),
-        ruralProducerId: ruralProducerData.id,
+        ruralProducerId: ruralProducer.id,
         name: crop,
       }
 
       this.plantedCropsItems.push(plantedCrop)
-
-      return plantedCrop
     })
 
-    return {
-      ruralProducerData,
-      plantedCropsData,
-    }
+    return ruralProducer
   }
 
-  async delete(ruralProducer: RuralProducer, plantedCrops: PlantedCrops[]) {
-    const itemIndex = this.items.findIndex(
-      (item) => item.id === ruralProducer.id,
+  async delete(data: RuralProducer) {
+    const itemIndex = this.items.findIndex((item) => item.id === data.id)
+    const plantedCropsItemIndex = this.plantedCropsItems.findIndex(
+      (item) => item.ruralProducerId === data.id,
     )
 
-    plantedCrops.forEach((crop) => {
-      const itemIndex = this.plantedCropsItems.findIndex(
-        (item) => item.id === crop.id,
-      )
-
-      this.plantedCropsItems.splice(itemIndex, 1)
-    })
-
+    this.plantedCropsItems.splice(plantedCropsItemIndex, 2)
     this.items.splice(itemIndex, 1)
   }
 }
