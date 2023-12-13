@@ -17,7 +17,7 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
 
   async findByCpfOrCnpj(cpfOrCnpj: string) {
     const ruralProducer = this.items.find(
-      (item) => item.cpfOrCnpj === cpfOrCnpj,
+      (item) => item.cpf_or_cnpj === cpfOrCnpj,
     )
 
     if (!ruralProducer) return null
@@ -29,33 +29,37 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
     const itemIndex = this.items.findIndex((item) => item.id === data.id)
 
     this.items[itemIndex] = data
+
+    this.plantedCropsItems.forEach((item, index) => {
+      item.name = data.planted_crops[index]
+    })
   }
 
   async create(data: RuralProducer) {
     const ruralProducer = {
       id: randomUUID(),
-      cpfOrCnpj: data.cpfOrCnpj,
-      producerName: data.producerName,
-      farmName: data.farmName,
+      cpf_or_cnpj: data.cpf_or_cnpj,
+      producer_name: data.producer_name,
+      farm_name: data.farm_name,
       city: data.city,
       state: data.state,
-      totalArea: data.totalArea,
-      agriculturalArea: data.agriculturalArea,
-      vegetationArea: data.vegetationArea,
-      plantedCrops: data.plantedCrops,
+      total_area: data.total_area,
+      agricultural_area: data.agricultural_area,
+      vegetation_area: data.vegetation_area,
+      planted_crops: data.planted_crops,
     }
 
     this.items.push(ruralProducer)
 
-    // ruralProducer.plantedCrops.forEach((crop) => {
-    //   const plantedCrop = {
-    //     id: randomUUID(),
-    //     ruralProducerId: ruralProducer.id,
-    //     name: crop,
-    //   }
+    ruralProducer.planted_crops.forEach((crop) => {
+      const plantedCrop = {
+        id: randomUUID(),
+        ruralProducerId: ruralProducer.id,
+        name: crop,
+      }
 
-    //   this.plantedCropsItems.push(plantedCrop)
-    // })
+      this.plantedCropsItems.push(plantedCrop)
+    })
 
     return ruralProducer
   }
@@ -66,7 +70,7 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
       (item) => item.ruralProducerId === data.id,
     )
 
-    this.plantedCropsItems.splice(plantedCropsItemIndex, 1)
+    this.plantedCropsItems.splice(plantedCropsItemIndex, 2)
     this.items.splice(itemIndex, 1)
   }
 }

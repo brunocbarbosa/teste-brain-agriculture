@@ -57,15 +57,15 @@ export class RegisterRuralProducerUseCase {
       throw new TotalAreaError()
 
     const ruralProducer = await this.ruralProducerRepository.create({
-      cpfOrCnpj,
-      producerName,
-      farmName,
+      cpf_or_cnpj: cpfOrCnpj,
+      producer_name: producerName,
+      farm_name: farmName,
       city,
       state,
-      totalArea,
-      agriculturalArea,
-      vegetationArea,
-      plantedCrops,
+      total_area: totalArea,
+      agricultural_area: agriculturalArea,
+      vegetation_area: vegetationArea,
+      planted_crops: plantedCrops,
     })
 
     return {
