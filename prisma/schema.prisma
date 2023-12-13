@@ -10,20 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PlantedCropsEnum {
+  SOJA
+  MILHO
+  ALGODAO
+  CAFE
+  CANA_DE_ACUCAR
+}
+
 model RuralProducer {
-  id               String @id @default(uuid())
-  cpfOrCnpj        String
-  producerName     String
-  farmName         String
-  city             String
-  state            String
-  totalArea        String
-  agriculturalArea String
-  vegetationArea   String
+  id                String         @id @default(uuid())
+  cpf_or_cnpj       String         @unique
+  producer_name     String
+  farm_name         String
+  city              String
+  state             String
+  total_area        String
+  agricultural_area String
+  vegetation_area   String
+  Planted_Crops     PlantedCrops[]
 }
 
 model PlantedCrops {
-  id              String @id @default(uuid())
-  ruralProducerId String
-  name            String
+  id   String           @id @default(uuid())
+  name PlantedCropsEnum
+
+  rural_producer    RuralProducer @relation(fields: [rural_producer_id], references: [id])
+  rural_producer_id String
 }
