@@ -1,5 +1,5 @@
 import { RuralProducerRepository } from '@/repositories/rural-producer-repository'
-import { RuralProducer } from '@/utils/types/rural-producer'
+import { RuralProducerWithoutPlantedCrops } from '@/utils/types/rural-producer'
 import { RuralProducerAlreadyExistsError } from './errors/rural-producer-already-exists-error'
 import {
   agriculturalAndVegetationAreasSum,
@@ -8,6 +8,7 @@ import {
 import { CpfOrCnpjIsNotValidError } from './errors/cpf-or-cnpj-is-not-valid-error'
 import { TotalAreaError } from './errors/total-area-error'
 import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
+import { PlantedCrops } from '@/utils/types/planted-crops'
 
 interface registerRuralProducerUseCaseRequest {
   cpfOrCnpj: string
@@ -18,11 +19,12 @@ interface registerRuralProducerUseCaseRequest {
   totalArea: number
   agriculturalArea: number
   vegetationArea: number
-  plantedCrops: PlantedCropsEnum[]
+  plantedCropsEnum: PlantedCropsEnum[]
 }
 
 interface registerRuralProducerUseCaseResponse {
-  ruralProducer: RuralProducer
+  ruralProducer: RuralProducerWithoutPlantedCrops
+  plantedCropsCount: number
 }
 
 export class RegisterRuralProducerUseCase {
@@ -37,7 +39,7 @@ export class RegisterRuralProducerUseCase {
     totalArea,
     agriculturalArea,
     vegetationArea,
-    plantedCrops,
+    plantedCropsEnum,
   }: registerRuralProducerUseCaseRequest): Promise<registerRuralProducerUseCaseResponse> {
     const producerWithTheSameCpfOrCnpj =
       await this.ruralProducerRepository.findByCpfOrCnpj(cpfOrCnpj)
@@ -56,20 +58,39 @@ export class RegisterRuralProducerUseCase {
     )
       throw new TotalAreaError()
 
-    const ruralProducer = await this.ruralProducerRepository.create({
-      cpf_or_cnpj: cpfOrCnpj,
-      producer_name: producerName,
-      farm_name: farmName,
-      city,
-      state,
-      total_area: totalArea,
-      agricultural_area: agriculturalArea,
-      vegetation_area: vegetationArea,
-      planted_crops: plantedCrops,
+    const ruralProducer =
+      await this.ruralProducerRepository.createRuralProducer({
+        cpf_or_cnpj: cpfOrCnpj,
+        producer_name: producerName,
+        farm_name: farmName,
+        city,
+        state,
+        total_area: totalArea,
+        agricultural_area: agriculturalArea,
+        vegetation_area: vegetationArea,
+      })
+
+    const plantedCropsData: PlantedCrops[] = []
+
+    plantedCropsEnum.forEach((item) => {
+      let obj
+
+      if (ruralProducer.id) {
+        obj = {
+          name: item,
+          rural_producer_id: ruralProducer.id,
+        }
+
+        plantedCropsData.push(obj)
+      }
     })
+
+    const plantedCropsCount =
+      await this.ruralProducerRepository.createPlantedCrops(plantedCropsData)
 
     return {
       ruralProducer,
+      plantedCropsCount,
     }
   }
 }

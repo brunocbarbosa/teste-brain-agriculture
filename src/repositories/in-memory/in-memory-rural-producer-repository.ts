@@ -1,18 +1,38 @@
-import { RuralProducer } from '@/utils/types/rural-producer'
+import {
+  RuralProducer,
+  RuralProducerWithoutPlantedCrops,
+} from '@/utils/types/rural-producer'
 import { RuralProducerRepository } from '../rural-producer-repository'
 import { randomUUID } from 'node:crypto'
 import { PlantedCrops } from '@/utils/types/planted-crops'
+import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 
 export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
-  public items: RuralProducer[] = []
+  public items: RuralProducerWithoutPlantedCrops[] = []
   public plantedCropsItems: PlantedCrops[] = []
 
   async findById(id: string) {
     const ruralProducer = this.items.find((item) => item.id === id)
 
-    if (!ruralProducer) return null
+    let producer: RuralProducer
 
-    return ruralProducer
+    if (ruralProducer) {
+      producer = {
+        id,
+        cpf_or_cnpj: ruralProducer.cpf_or_cnpj,
+        producer_name: ruralProducer.producer_name,
+        farm_name: ruralProducer.farm_name,
+        city: ruralProducer.city,
+        state: ruralProducer.state,
+        total_area: ruralProducer.total_area,
+        agricultural_area: ruralProducer.agricultural_area,
+        vegetation_area: ruralProducer.vegetation_area,
+        planted_crops: this.plantedCropsItems,
+      }
+      return producer
+    }
+
+    return null
   }
 
   async findByCpfOrCnpj(cpfOrCnpj: string) {
@@ -20,22 +40,42 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
       (item) => item.cpf_or_cnpj === cpfOrCnpj,
     )
 
-    if (!ruralProducer) return null
+    let producer: RuralProducer
 
-    return ruralProducer
+    if (ruralProducer) {
+      producer = {
+        id: ruralProducer.id,
+        cpf_or_cnpj: cpfOrCnpj,
+        producer_name: ruralProducer.producer_name,
+        farm_name: ruralProducer.farm_name,
+        city: ruralProducer.city,
+        state: ruralProducer.state,
+        total_area: ruralProducer.total_area,
+        agricultural_area: ruralProducer.agricultural_area,
+        vegetation_area: ruralProducer.vegetation_area,
+        planted_crops: this.plantedCropsItems,
+      }
+      return producer
+    }
+
+    return null
   }
 
-  async save(data: RuralProducer) {
+  async saveRuralProducer(data: RuralProducerWithoutPlantedCrops) {
     const itemIndex = this.items.findIndex((item) => item.id === data.id)
 
     this.items[itemIndex] = data
+  }
 
+  async savePlantedCrops(data: PlantedCrops[], ruralProducerId: string) {
     this.plantedCropsItems.forEach((item, index) => {
-      item.name = data.planted_crops[index]
+      if (item.id === ruralProducerId) {
+        item.name = data[index].name
+      }
     })
   }
 
-  async create(data: RuralProducer) {
+  async createRuralProducer(data: RuralProducerWithoutPlantedCrops) {
     const ruralProducer = {
       id: randomUUID(),
       cpf_or_cnpj: data.cpf_or_cnpj,
@@ -46,28 +86,33 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
       total_area: data.total_area,
       agricultural_area: data.agricultural_area,
       vegetation_area: data.vegetation_area,
-      planted_crops: data.planted_crops,
     }
 
     this.items.push(ruralProducer)
 
-    ruralProducer.planted_crops.forEach((crop) => {
+    return ruralProducer
+  }
+
+  async createPlantedCrops(plantedCrops: PlantedCrops[]) {
+    plantedCrops.forEach((crop) => {
       const plantedCrop = {
         id: randomUUID(),
-        ruralProducerId: ruralProducer.id,
-        name: crop,
+        rural_producer_id: crop.rural_producer_id,
+        name: crop.name,
       }
 
       this.plantedCropsItems.push(plantedCrop)
     })
 
-    return ruralProducer
+    const count = this.plantedCropsItems.length
+
+    return count
   }
 
-  async delete(data: RuralProducer) {
-    const itemIndex = this.items.findIndex((item) => item.id === data.id)
+  async delete(id: string) {
+    const itemIndex = this.items.findIndex((item) => item.id === id)
     const plantedCropsItemIndex = this.plantedCropsItems.findIndex(
-      (item) => item.ruralProducerId === data.id,
+      (item) => item.rural_producer_id === id,
     )
 
     this.plantedCropsItems.splice(plantedCropsItemIndex, 2)

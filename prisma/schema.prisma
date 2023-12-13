@@ -25,10 +25,10 @@ model RuralProducer {
   farm_name         String
   city              String
   state             String
-  total_area        String
-  agricultural_area String
-  vegetation_area   String
-  Planted_Crops     PlantedCrops[]
+  total_area        Float
+  agricultural_area Float
+  vegetation_area   Float
+  planted_crops     PlantedCrops[]
 }
 
 model PlantedCrops {

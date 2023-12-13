@@ -16,7 +16,7 @@ describe('Register Rural Use Case', () => {
   })
 
   it('should be able to register', async () => {
-    const plantedCropsArray = [PlantedCropsEnum.algodao, PlantedCropsEnum.milho]
+    const plantedCropsArray = [PlantedCropsEnum.ALGODAO, PlantedCropsEnum.MILHO]
 
     const { ruralProducer } = await sut.execute({
       cpfOrCnpj: '21859242570',
@@ -27,14 +27,14 @@ describe('Register Rural Use Case', () => {
       totalArea: 4000,
       agriculturalArea: 1500,
       vegetationArea: 1500,
-      plantedCrops: plantedCropsArray,
+      plantedCropsEnum: plantedCropsArray,
     })
 
     expect(ruralProducer.id).toEqual(expect.any(String))
   })
 
   it('should not be able to register with same cpf or cnpj', async () => {
-    const plantedCropsArray = [PlantedCropsEnum.algodao, PlantedCropsEnum.milho]
+    const plantedCropsArray = [PlantedCropsEnum.ALGODAO, PlantedCropsEnum.MILHO]
 
     await sut.execute({
       cpfOrCnpj: '21859242570',
@@ -45,7 +45,7 @@ describe('Register Rural Use Case', () => {
       totalArea: 4000,
       agriculturalArea: 1500,
       vegetationArea: 1500,
-      plantedCrops: plantedCropsArray,
+      plantedCropsEnum: plantedCropsArray,
     })
 
     await expect(() =>
@@ -58,13 +58,13 @@ describe('Register Rural Use Case', () => {
         totalArea: 4000,
         agriculturalArea: 1500,
         vegetationArea: 1500,
-        plantedCrops: plantedCropsArray,
+        plantedCropsEnum: plantedCropsArray,
       }),
     ).rejects.toBeInstanceOf(RuralProducerAlreadyExistsError)
   })
 
   it('should not be able to register with invalid CPF or CNPJ', async () => {
-    const plantedCropsArray = [PlantedCropsEnum.algodao, PlantedCropsEnum.milho]
+    const plantedCropsArray = [PlantedCropsEnum.ALGODAO, PlantedCropsEnum.MILHO]
 
     await expect(() =>
       sut.execute({
@@ -76,13 +76,13 @@ describe('Register Rural Use Case', () => {
         totalArea: 4000,
         agriculturalArea: 1500,
         vegetationArea: 1500,
-        plantedCrops: plantedCropsArray,
+        plantedCropsEnum: plantedCropsArray,
       }),
     ).rejects.toBeInstanceOf(CpfOrCnpjIsNotValidError)
   })
 
   it('should not be able to register if the sum of agricultural and vegetation is bigger than total area', async () => {
-    const plantedCropsArray = [PlantedCropsEnum.algodao, PlantedCropsEnum.milho]
+    const plantedCropsArray = [PlantedCropsEnum.ALGODAO, PlantedCropsEnum.MILHO]
 
     await expect(() =>
       sut.execute({
@@ -94,7 +94,7 @@ describe('Register Rural Use Case', () => {
         totalArea: 2000,
         agriculturalArea: 1500,
         vegetationArea: 1500,
-        plantedCrops: plantedCropsArray,
+        plantedCropsEnum: plantedCropsArray,
       }),
     ).rejects.toBeInstanceOf(TotalAreaError)
   })
