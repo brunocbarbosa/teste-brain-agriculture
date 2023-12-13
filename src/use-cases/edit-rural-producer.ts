@@ -1,5 +1,6 @@
 import { RuralProducerRepository } from '@/repositories/rural-producer-repository'
 import { RuralProducerNotFoundError } from './errors/rural-producer-not-found-error'
+import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 
 interface editRuralProducerUseCaseRequest {
   ruralProducerId: string
@@ -11,7 +12,7 @@ interface editRuralProducerUseCaseRequest {
   totalArea?: number
   agriculturalArea?: number
   vegetationArea?: number
-  plantedCrops?: string[]
+  plantedCrops?: PlantedCropsEnum[]
 }
 
 interface editRuralProducerUseCaseResponse {}
@@ -36,17 +37,17 @@ export class EditRuralProducerUseCase {
 
     if (!producerRural) throw new RuralProducerNotFoundError()
 
-    if (cpfOrCnpj !== undefined) producerRural.cpfOrCnpj = cpfOrCnpj
-    if (producerName !== undefined) producerRural.producerName = producerName
-    if (farmName !== undefined) producerRural.farmName = farmName
+    if (cpfOrCnpj !== undefined) producerRural.cpf_or_cnpj = cpfOrCnpj
+    if (producerName !== undefined) producerRural.producer_name = producerName
+    if (farmName !== undefined) producerRural.farm_name = farmName
     if (city !== undefined) producerRural.city = city
     if (state !== undefined) producerRural.state = state
-    if (totalArea !== undefined) producerRural.totalArea = totalArea
+    if (totalArea !== undefined) producerRural.total_area = totalArea
     if (agriculturalArea !== undefined)
-      producerRural.agriculturalArea = agriculturalArea
+      producerRural.agricultural_area = agriculturalArea
     if (vegetationArea !== undefined)
-      producerRural.vegetationArea = vegetationArea
-    if (plantedCrops !== undefined) producerRural.plantedCrops = plantedCrops
+      producerRural.vegetation_area = vegetationArea
+    if (plantedCrops !== undefined) producerRural.planted_crops = plantedCrops
 
     await this.ruralProducerRepository.save(producerRural)
 

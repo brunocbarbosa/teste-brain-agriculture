@@ -17,26 +17,39 @@ describe('Edit Rural Use Case', () => {
     const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
 
     const ruralProducer = await ruralProducerRepository.create({
-      cpfOrCnpj: '21859242570',
-      producerName: 'Thomas',
-      farmName: 'Fazendinha',
+      cpf_or_cnpj: '21859242570',
+      producer_name: 'Thomas',
+      farm_name: 'Fazendinha',
       city: 'Congonhal',
       state: 'MG',
-      totalArea: 4000,
-      agriculturalArea: 1500,
-      vegetationArea: 1500,
-      plantedCrops: plantedCropsArray,
+      total_area: 4000,
+      agricultural_area: 1500,
+      vegetation_area: 1500,
+      planted_crops: plantedCropsArray,
     })
+
+    const plantedCropsArrayEdit = [
+      PlantedCropsEnum.algodao,
+      PlantedCropsEnum.milho,
+    ]
 
     await sut.execute({
       ruralProducerId: ruralProducer.id,
       producerName: 'José',
       farmName: 'Fazendona',
+      plantedCrops: plantedCropsArrayEdit,
     })
 
     expect(ruralProducerRepository.items[0]).toMatchObject({
-      producerName: 'José',
-      farmName: 'Fazendona',
+      producer_name: 'José',
+      farm_name: 'Fazendona',
+      planted_crops: [PlantedCropsEnum.algodao, PlantedCropsEnum.milho],
+    })
+    expect(ruralProducerRepository.plantedCropsItems[0]).toMatchObject({
+      name: 'ALGODAO',
+    })
+    expect(ruralProducerRepository.plantedCropsItems[1]).toMatchObject({
+      name: 'MILHO',
     })
   })
 
@@ -44,15 +57,15 @@ describe('Edit Rural Use Case', () => {
     const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
 
     const ruralProducer = await ruralProducerRepository.create({
-      cpfOrCnpj: '21859242570',
-      producerName: 'Thomas',
-      farmName: 'Fazendinha',
+      cpf_or_cnpj: '21859242570',
+      producer_name: 'Thomas',
+      farm_name: 'Fazendinha',
       city: 'Congonhal',
       state: 'MG',
-      totalArea: 4000,
-      agriculturalArea: 1500,
-      vegetationArea: 1500,
-      plantedCrops: plantedCropsArray,
+      total_area: 4000,
+      agricultural_area: 1500,
+      vegetation_area: 1500,
+      planted_crops: plantedCropsArray,
     })
 
     await expect(() =>
