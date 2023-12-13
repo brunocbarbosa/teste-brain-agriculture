@@ -1,7 +1,6 @@
 import { RuralProducerRepository } from '@/repositories/rural-producer-repository'
 import { RuralProducerNotFoundError } from './errors/rural-producer-not-found-error'
-import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
-import { PlantedCrops } from '@prisma/client'
+import { PlantedCrops } from '@/utils/types/planted-crops'
 
 interface editRuralProducerUseCaseRequest {
   ruralProducerId: string
@@ -35,6 +34,8 @@ export class EditRuralProducerUseCase {
   }: editRuralProducerUseCaseRequest): Promise<editRuralProducerUseCaseResponse> {
     const producerRural =
       await this.ruralProducerRepository.findById(ruralProducerId)
+
+    console.log('producerRural: ', producerRural)
 
     if (!producerRural) throw new RuralProducerNotFoundError()
 

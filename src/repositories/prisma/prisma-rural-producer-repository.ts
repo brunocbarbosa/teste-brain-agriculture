@@ -1,9 +1,5 @@
-import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 import { PlantedCrops } from '@/utils/types/planted-crops'
-import {
-  RuralProducer,
-  RuralProducerWithoutPlantedCrops,
-} from '@/utils/types/rural-producer'
+import { RuralProducerWithoutPlantedCrops } from '@/utils/types/rural-producer'
 import { RuralProducerRepository } from '../rural-producer-repository'
 import { prisma } from '@/lib/prisma'
 
