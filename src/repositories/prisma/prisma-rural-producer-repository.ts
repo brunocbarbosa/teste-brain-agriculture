@@ -49,6 +49,8 @@ export class PrismaRuralProducerRepository implements RuralProducerRepository {
   }
 
   async saveRuralProducer(data: RuralProducerWithoutPlantedCrops) {
+    console.log('data: ', data)
+
     prisma.ruralProducer.update({
       where: {
         id: data.id,

@@ -5,6 +5,6 @@ import { erase } from './erase'
 
 export async function ruralProducerRoutes(app: FastifyInstance) {
   app.post('/rural-producer', register)
-  app.put('/rural-producer/:ruralProducerId', edit)
+  app.patch('/rural-producer/:ruralProducerId', edit)
   app.delete('/rural-producer/:ruralProducerId', erase)
 }

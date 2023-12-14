@@ -48,16 +48,10 @@ describe('Edit Rural Producer (e2e)', () => {
       data,
     })
 
-    console.log('ruralProducer: ', ruralProducer)
-
     const res = await request(app.server)
-      .put(`/rural-producer/${ruralProducer.id}`)
+      .patch(`/rural-producer/${ruralProducer.id}`)
       .send({
-        cpf_or_cnpj: '21859242570',
-        producer_name: 'Thomas',
-        farm_name: 'Fazendinha',
-        city: 'Congonhal',
-        state: 'MG',
+        city: 'Congonhal II',
       })
 
     expect(res.statusCode).toEqual(204)

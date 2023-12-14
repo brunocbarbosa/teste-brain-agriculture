@@ -5,9 +5,11 @@ import { makeEditRuralProducerUseCase } from '@/use-cases/factories/make-edit-ru
 import { RuralProducerNotFoundError } from '@/use-cases/errors/rural-producer-not-found-error'
 
 export async function edit(req: FastifyRequest, rep: FastifyReply) {
-  console.log(req.body)
-  const editRuralProducerSchema = z.object({
+  const editRuralProducerParamSchema = z.object({
     ruralProducerId: z.string().uuid(),
+  })
+
+  const editRuralProducerBodySchema = z.object({
     cpfOrCnpj: z.string().optional(),
     producerName: z.string().optional(),
     farmName: z.string().optional(),
@@ -26,9 +28,7 @@ export async function edit(req: FastifyRequest, rep: FastifyReply) {
       .optional(),
   })
 
-  const { ruralProducerId } = editRuralProducerSchema.parse(req.params)
-
-  console.log('ruralProducerId: ', ruralProducerId)
+  const { ruralProducerId } = editRuralProducerParamSchema.parse(req.params)
 
   const {
     cpfOrCnpj,
@@ -40,9 +40,7 @@ export async function edit(req: FastifyRequest, rep: FastifyReply) {
     agriculturalArea,
     vegetationArea,
     plantedCrops,
-  } = editRuralProducerSchema.parse(req.body)
-
-  console.log('city: ', city)
+  } = editRuralProducerBodySchema.parse(req.body)
 
   try {
     const editRuralProducerUseCase = makeEditRuralProducerUseCase()

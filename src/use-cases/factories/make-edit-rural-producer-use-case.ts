@@ -2,8 +2,8 @@ import { PrismaRuralProducerRepository } from '@/repositories/prisma/prisma-rura
 import { EditRuralProducerUseCase } from '../edit-rural-producer'
 
 export function makeEditRuralProducerUseCase() {
-  const prismaContestRepository = new PrismaRuralProducerRepository()
-  const useCase = new EditRuralProducerUseCase(prismaContestRepository)
+  const prismaRuralProducerRepository = new PrismaRuralProducerRepository()
+  const useCase = new EditRuralProducerUseCase(prismaRuralProducerRepository)
 
   return useCase
 }

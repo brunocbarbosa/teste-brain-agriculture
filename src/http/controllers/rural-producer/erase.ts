@@ -6,16 +6,16 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 export async function erase(req: FastifyRequest, rep: FastifyReply) {
-  const registerContestSchema = z.object({
-    ruralProducerId: z.string(),
+  const eraseRuralproducerSchema = z.object({
+    ruralProducerId: z.string().uuid(),
   })
 
-  const { ruralProducerId } = registerContestSchema.parse(req.params)
+  const { ruralProducerId } = eraseRuralproducerSchema.parse(req.params)
 
   try {
-    const registerContestUseCase = makeEraseRuralProcerUseCase()
+    const eraseRuralproducerUseCase = makeEraseRuralProcerUseCase()
 
-    await registerContestUseCase.execute({
+    await eraseRuralproducerUseCase.execute({
       ruralProducerId,
     })
   } catch (error) {

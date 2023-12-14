@@ -51,6 +51,8 @@ export class EditRuralProducerUseCase {
       producerRural.vegetation_area = vegetationArea
     if (plantedCrops !== undefined) producerRural.planted_crops = plantedCrops
 
+    console.log('producerRuralEdit: ', producerRural)
+
     await this.ruralProducerRepository.saveRuralProducer(producerRural)
     await this.ruralProducerRepository.savePlantedCrops(
       producerRural.planted_crops,

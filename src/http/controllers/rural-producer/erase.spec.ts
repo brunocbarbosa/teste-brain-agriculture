@@ -5,7 +5,7 @@ import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
 import { prisma } from '@/lib/prisma'
 import { PlantedCrops } from '@/utils/types/planted-crops'
 
-describe('Edit Rural Producer (e2e)', () => {
+describe('Delete Rural Producer (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -13,7 +13,7 @@ describe('Edit Rural Producer (e2e)', () => {
     await app.close()
   })
 
-  it('should be able to edit', async () => {
+  it('should be able to deletex', async () => {
     const plantedCropsArray = [PlantedCropsEnum.ALGODAO, PlantedCropsEnum.MILHO]
 
     const ruralProducer = await prisma.ruralProducer.create({
@@ -47,8 +47,6 @@ describe('Edit Rural Producer (e2e)', () => {
     await prisma.plantedCrops.createMany({
       data,
     })
-
-    console.log('ruralProducer: ', ruralProducer)
 
     const res = await request(app.server)
       .delete(`/rural-producer/${ruralProducer.id}`)
