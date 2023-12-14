@@ -11,6 +11,14 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
   public items: RuralProducerWithoutPlantedCrops[] = []
   public plantedCropsItems: PlantedCrops[] = []
 
+  async findAllRuralProducer() {
+    return this.items
+  }
+
+  async findAllPlantedCrops() {
+    return this.plantedCropsItems
+  }
+
   async findById(id: string) {
     const ruralProducer = this.items.find((item) => item.id === id)
 
@@ -67,11 +75,13 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
     this.items[itemIndex] = data
   }
 
-  async savePlantedCrops(data: PlantedCrops[], ruralProducerId: string) {
-    this.plantedCropsItems.forEach((item, index) => {
-      if (item.id === ruralProducerId) {
-        item.name = data[index].name
-      }
+  async savePlantedCrops(data: PlantedCrops[]) {
+    this.plantedCropsItems.forEach((item) => {
+      data.forEach((crop) => {
+        if (item.id === crop.id) {
+          item.name = crop.name
+        }
+      })
     })
   }
 

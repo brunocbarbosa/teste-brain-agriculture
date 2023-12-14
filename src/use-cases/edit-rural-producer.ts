@@ -1,6 +1,7 @@
 import { RuralProducerRepository } from '@/repositories/rural-producer-repository'
 import { RuralProducerNotFoundError } from './errors/rural-producer-not-found-error'
 import { PlantedCrops } from '@/utils/types/planted-crops'
+import { RuralProducerWithoutPlantedCrops } from '@/utils/types/rural-producer'
 
 interface editRuralProducerUseCaseRequest {
   ruralProducerId: string
@@ -49,11 +50,38 @@ export class EditRuralProducerUseCase {
       producerRural.vegetation_area = vegetationArea
     if (plantedCrops !== undefined) producerRural.planted_crops = plantedCrops
 
-    await this.ruralProducerRepository.saveRuralProducer(producerRural)
-    await this.ruralProducerRepository.savePlantedCrops(
-      producerRural.planted_crops,
-      ruralProducerId,
-    )
+    const ruralProducerWithoutPlantedCrops: RuralProducerWithoutPlantedCrops = {
+      id: producerRural.id,
+      cpf_or_cnpj: producerRural.cpf_or_cnpj,
+      producer_name: producerRural.producer_name,
+      farm_name: producerRural.farm_name,
+      city: producerRural.city,
+      state: producerRural.state,
+      total_area: producerRural.total_area,
+      agricultural_area: producerRural.agricultural_area,
+      vegetation_area: producerRural.vegetation_area,
+    }
+
+    const PlantedCropsEdit: PlantedCrops[] = producerRural.planted_crops
+
+    if (
+      cpfOrCnpj !== undefined ||
+      producerName !== undefined ||
+      farmName !== undefined ||
+      city !== undefined ||
+      state !== undefined ||
+      totalArea !== undefined ||
+      agriculturalArea !== undefined ||
+      vegetationArea !== undefined
+    ) {
+      await this.ruralProducerRepository.saveRuralProducer(
+        ruralProducerWithoutPlantedCrops,
+      )
+    }
+
+    if (plantedCrops !== undefined) {
+      await this.ruralProducerRepository.savePlantedCrops(PlantedCropsEdit)
+    }
 
     return {}
   }

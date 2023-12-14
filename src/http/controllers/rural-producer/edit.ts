@@ -21,6 +21,7 @@ export async function edit(req: FastifyRequest, rep: FastifyReply) {
     plantedCrops: z
       .array(
         z.object({
+          id: z.string(),
           rural_producer_id: z.string(),
           name: z.nativeEnum(PlantedCropsEnum),
         }),
