@@ -24,9 +24,10 @@
 2. Crie o arquivo .env e copie as variáveis de ambiente do arquivo .env_example para o .env
 2.  Instalar o banco de dados com o comando `docker-compose up -d` 
 3.  Após criar o banco de dados rode o comando `npm run prisma:migrate:deploy` para rodar as migrations e criar as tabelas
-4.  Para popular o banco de dados com o comando `npm run prisma:seed`
-5.  Utilize o comando `npm run build` para criar a pasta dist com os arquivos js
-6. Para rodar utilize `npm run start`
+4.  Rode `npm run prisma:generate` após o passo 3, o .env deve estar criado, para restabelecer o link entre o schema e o .env e não ter erro ao gerar o seed. 
+5.  Para popular o banco de dados com o comando `npm run prisma:seed`
+6.  Utilize o comando `npm run build` para criar a pasta dist com os arquivos js
+7. Para rodar utilize `npm run start`
 
 ## Comandos Interessantes
 - Com o comando `npm run prisma:studio` poderá ver o banco de dados pelo prisma studio

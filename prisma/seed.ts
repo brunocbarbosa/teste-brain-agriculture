@@ -7,7 +7,7 @@ async function main() {
     create: {
       cpf_or_cnpj: '19558798002',
       producer_name: 'Alice',
-      farm_name: 'Brejal',
+      farm_name: 'farm1',
       city: 'Pouso Alegre',
       state: 'MG',
       total_area: 5000,
@@ -33,7 +33,7 @@ async function main() {
     create: {
       cpf_or_cnpj: '98639102015',
       producer_name: 'Bruno',
-      farm_name: 'Passaros',
+      farm_name: 'farm2',
       city: 'São Paulo',
       state: 'SP',
       total_area: 15000,
@@ -59,7 +59,7 @@ async function main() {
     create: {
       cpf_or_cnpj: '46421445012',
       producer_name: 'Marcos',
-      farm_name: 'Feliz',
+      farm_name: 'farm3',
       city: 'Congonhal',
       state: 'MG',
       total_area: 30000,
