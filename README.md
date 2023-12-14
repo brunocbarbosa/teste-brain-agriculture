@@ -29,10 +29,8 @@
                                                               "totalArea": number
                                                               "agriculturalArea": number
                                                               "vegetationArea": number
-                                                              "plantedCropsEnum": [{
-                                                                "rural_producer_id": string,
-                                                                "name": string
-                                                              }] 
+                                                              "plantedCropsEnum": ['SOJA', 'MILHO', 
+                                                                'ALGODAO', 'CAFE', 'CANA_DE_ACUCAR'] 
                                                             }
 
 | TIPO  |                 ROTA                | DESCRIÇÃO |           EXEMPLO                 |
