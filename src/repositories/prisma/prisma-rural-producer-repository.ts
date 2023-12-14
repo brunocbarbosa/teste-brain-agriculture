@@ -57,7 +57,7 @@ export class PrismaRuralProducerRepository implements RuralProducerRepository {
   }
 
   async saveRuralProducer(data: RuralProducerWithoutPlantedCrops) {
-    prisma.ruralProducer.update({
+    await prisma.ruralProducer.update({
       where: {
         id: data.id,
       },
@@ -65,12 +65,16 @@ export class PrismaRuralProducerRepository implements RuralProducerRepository {
     })
   }
 
-  async savePlantedCrops(data: PlantedCrops[], ruralProducerId: string) {
-    prisma.plantedCrops.updateMany({
-      where: {
-        rural_producer_id: ruralProducerId,
-      },
-      data,
+  async savePlantedCrops(data: PlantedCrops[]) {
+    data.forEach(async (item) => {
+      await prisma.plantedCrops.update({
+        where: {
+          id: item.id,
+        },
+        data: {
+          name: item.name,
+        },
+      })
     })
   }
 

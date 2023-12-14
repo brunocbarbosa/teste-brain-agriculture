@@ -11,7 +11,7 @@ export interface RuralProducerRepository {
   findById(id: string): Promise<RuralProducer | null>
   findByCpfOrCnpj(cpfOrCnpj: string): Promise<RuralProducer | null>
   saveRuralProducer(data: RuralProducerWithoutPlantedCrops): Promise<void>
-  savePlantedCrops(data: PlantedCrops[], ruralProducerId: string): Promise<void>
+  savePlantedCrops(data: PlantedCrops[]): Promise<void>
   createRuralProducer(
     data: RuralProducerWithoutPlantedCrops,
   ): Promise<RuralProducerWithoutPlantedCrops>

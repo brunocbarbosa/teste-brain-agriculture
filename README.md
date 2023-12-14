@@ -1,44 +1,63 @@
 # Teste - Brain Agriculture
 
-O teste tem como objetivo acurar as habilidades do candidato em resolver alguns problemas relacionados à lógica de programação, regra de negócio e orientação à objetos.
+## Instruções Iniciais
 
-O mesmo consiste em um cadastro de produtor rural com os seguintes dados:
+1.  Utilizar o comando `npm install` para instalar todas as dependencias 
+2. Crie o arquivo .env e copie as variáveis de ambiente do arquivo .env_example para o .env
+2.  Instlar o banco de dados com o comando `docker-compose up -d` 
+3.  Após criar o banco de dados rode o comando `npm run prisma:migrate:deploy` para rodar as migrations e criar as tabelas
+4.  Para popular o banco de dados com o comando `npm run prisma:seed`
+5.  Utilize o comando `npm run build` para criar a pasta dist com os arquivos js.
+6 - Para rodar utilize `npm run start`
 
-1.  CPF ou CNPJ
-2.  Nome do produtor
-3.  Nome da Fazenda
-4.  Cidade
-5.  Estado
-6.  Área total em hectares da fazenda
-7.  Área agricultável em hectares
-8.  Área de vegetação em hectares
-9.  Culturas plantadas (Soja, Milho, Algodão, Café, Cana de Açucar)
+## Comandos Interessantes
+- Com o comando `npm run prisma:studio` poderá ver o banco de dados pelo prisma studio
+- Para rodar os testes integrados utilize o comando `npm run test`
+- Para rodar os testes e2e utilize o comando `npm run test:e2e`, para utiliza-lo é preciso primeiro criar o arquivo .env, o banco de dados e rodar as migrations
+- Para rodar em modo de desenvolvimento utilize o comando `npm run dev`
 
-# Requisitos de negócio
+## Rotas
+| TIPO  |                 ROTA                | DESCRIÇÃO |           EXEMPLO                 |
+| ----  | ----------------------------------- | --------- | --------------------------------- |
+| POST  | /rural-producer                     | Criação   |                                   
+                                                            {                                 
+                                                              "cpfOrCnpj": string,
+                                                              "producerName": string
+                                                              "farmName": string
+                                                              "city": string
+                                                              "state": string
+                                                              "totalArea": number
+                                                              "agriculturalArea": number
+                                                              "vegetationArea": number
+                                                              "plantedCropsEnum": [{
+                                                                "rural_producer_id": string,
+                                                                "name": string
+                                                              }] 
+                                                            }
 
-- O usuário deverá ter a possibilidade de cadastrar, editar, e excluir produtores rurais.
-- O sistema deverá validar CPF e CNPJ digitados incorretamente.
-- A soma de área agrícultável e vegetação, não deverá ser maior que a área total da fazenda
-- Cada produtor pode plantar mais de uma cultura em sua Fazenda.
-- A plataforma deverá ter um Dashboard que exiba:
-  - Total de fazendas em quantidade
-  - Total de fazendas em hectares (área total)
-  - Gráfico de pizza por estado.
-  - Gráfico de pizza por cultura.
-  - Gráfico de pizza por uso de solo (Área agricultável e vegetação)
+| TIPO  |                 ROTA                | DESCRIÇÃO |           EXEMPLO                 |
+| ----- | --------------------------------- | ----------- | --------------------------------  |
+| PATCH | /rural-producer/:ruralProducerId  |   Editar    |
+                                                            {
+                                                              "cpfOrCnpj": string,
+                                                              "producerName": string
+                                                              "farmName": string
+                                                              "city": string
+                                                              "state": string
+                                                              "totalArea": number
+                                                              "agriculturalArea": number
+                                                              "vegetationArea": number
+                                                              "plantedCropsEnum": [{
+                                                                "id": string
+                                                                "rural_producer_id": string,
+                                                                "name": string
+                                                              }] 
+                                                            }
 
-# Requisitos técnicos
+| TIPO   |                 ROTA                | DESCRIÇÃO   |           EXEMPLO                 |
+| -----  | ---------------------------------   | ----------- | --------------------------------  |
+| DELETE | /rural-producer/:ruralProducerId    |   Deletar   |
 
-- O desenvolvedor front-end deverá utilizar:
-
-  - [ReactJS](http://reactjs.org);
-  - [Redux](https://redux.js.org/) para controlar o estado da aplicação.
-    - Caso entenda que faça sentido, utilize [Context API](https://reactjs.org/docs/context.html) como recurso adicional ou substituto ao Redux (Opcional)
-  - Crie pelo menos um teste unitário por componente (Opcional)
-  - A criação das estruturas de dados "mockados" faz parte da avaliação.
-
-- O desenvolvedor back-end deve:
-  - Salvar os dados em um banco de dados Postgres usando o NodeJS como layer de Backend, e entregar os endpoints para cadastrar, editar, e excluir produtores rurais, além do endpoint que retorne os totais para o dashboard.
-  - A criação das estruturas de dados "mockados" faz parte da avaliação.
-- O desenvolvedor full-stack deve realizar ambos, e concluir a integração.
-  > Não envie a solução como anexo, suba os fontes para seu Github (ou outro repositório) e envie o link para o avaliador.
+| TIPO  |                 ROTA              | DESCRIÇÃO     |           EXEMPLO                 |
+| ----- | --------------------------------- | -----------   | --------------------------------  |
+| GET   |     /rural-producer/              |   Pegar Infos |
