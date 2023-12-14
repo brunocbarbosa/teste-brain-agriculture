@@ -14,9 +14,7 @@ describe('Edit Rural Producer Use Case', () => {
   })
 
   it('should be able to delete', async () => {
-    const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
-
-    const ruralProducer = await ruralProducerRepository.create({
+    const ruralProducer = await ruralProducerRepository.createRuralProducer({
       cpf_or_cnpj: '21859242570',
       producer_name: 'Thomas',
       farm_name: 'Fazendinha',
@@ -25,8 +23,20 @@ describe('Edit Rural Producer Use Case', () => {
       total_area: 4000,
       agricultural_area: 1500,
       vegetation_area: 1500,
-      planted_crops: plantedCropsArray,
     })
+
+    const plantedCropsObj = [
+      {
+        rural_producer_id: ruralProducer.id,
+        name: PlantedCropsEnum.CAFE,
+      },
+      {
+        rural_producer_id: ruralProducer.id,
+        name: PlantedCropsEnum.MILHO,
+      },
+    ]
+
+    await ruralProducerRepository.createPlantedCrops(plantedCropsObj)
 
     await sut.execute({
       ruralProducerId: ruralProducer.id,
@@ -37,9 +47,7 @@ describe('Edit Rural Producer Use Case', () => {
   })
 
   it('should not be able to delete if not found rural producer', async () => {
-    const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
-
-    const ruralProducer = await ruralProducerRepository.create({
+    const ruralProducer = await ruralProducerRepository.createRuralProducer({
       cpf_or_cnpj: '21859242570',
       producer_name: 'Thomas',
       farm_name: 'Fazendinha',
@@ -48,8 +56,20 @@ describe('Edit Rural Producer Use Case', () => {
       total_area: 4000,
       agricultural_area: 1500,
       vegetation_area: 1500,
-      planted_crops: plantedCropsArray,
     })
+
+    const plantedCropsObj = [
+      {
+        rural_producer_id: ruralProducer.id,
+        name: PlantedCropsEnum.CAFE,
+      },
+      {
+        rural_producer_id: ruralProducer.id,
+        name: PlantedCropsEnum.MILHO,
+      },
+    ]
+
+    await ruralProducerRepository.createPlantedCrops(plantedCropsObj)
 
     await expect(() =>
       sut.execute({

@@ -1,9 +1,18 @@
-import { RuralProducer } from '@/utils/types/rural-producer'
+import { PlantedCrops } from '@/utils/types/planted-crops'
+import {
+  RuralProducer,
+  RuralProducerWithoutPlantedCrops,
+} from '@/utils/types/rural-producer'
+import { Prisma } from '@prisma/client'
 
 export interface RuralProducerRepository {
   findById(id: string): Promise<RuralProducer | null>
   findByCpfOrCnpj(cpfOrCnpj: string): Promise<RuralProducer | null>
-  save(data: RuralProducer): Promise<void>
-  create(data: RuralProducer): Promise<RuralProducer>
-  delete(data: RuralProducer): Promise<void>
+  saveRuralProducer(data: RuralProducerWithoutPlantedCrops): Promise<void>
+  savePlantedCrops(data: PlantedCrops[], ruralProducerId: string): Promise<void>
+  createRuralProducer(
+    data: RuralProducerWithoutPlantedCrops,
+  ): Promise<RuralProducerWithoutPlantedCrops>
+  createPlantedCrops(data: PlantedCrops[]): Promise<number>
+  delete(id: string): Promise<void>
 }

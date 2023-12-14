@@ -14,9 +14,7 @@ describe('Edit Rural Use Case', () => {
   })
 
   it('should be able to Edit', async () => {
-    const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
-
-    const ruralProducer = await ruralProducerRepository.create({
+    const ruralProducer = await ruralProducerRepository.createRuralProducer({
       cpf_or_cnpj: '21859242570',
       producer_name: 'Thomas',
       farm_name: 'Fazendinha',
@@ -25,38 +23,35 @@ describe('Edit Rural Use Case', () => {
       total_area: 4000,
       agricultural_area: 1500,
       vegetation_area: 1500,
-      planted_crops: plantedCropsArray,
     })
 
-    const plantedCropsArrayEdit = [
-      PlantedCropsEnum.algodao,
-      PlantedCropsEnum.milho,
+    const plantedCropsObj = [
+      {
+        rural_producer_id: ruralProducer.id,
+        name: PlantedCropsEnum.CAFE,
+      },
+      {
+        rural_producer_id: ruralProducer.id,
+        name: PlantedCropsEnum.MILHO,
+      },
     ]
+
+    await ruralProducerRepository.createPlantedCrops(plantedCropsObj)
 
     await sut.execute({
       ruralProducerId: ruralProducer.id,
       producerName: 'José',
       farmName: 'Fazendona',
-      plantedCrops: plantedCropsArrayEdit,
     })
 
     expect(ruralProducerRepository.items[0]).toMatchObject({
       producer_name: 'José',
       farm_name: 'Fazendona',
-      planted_crops: [PlantedCropsEnum.algodao, PlantedCropsEnum.milho],
-    })
-    expect(ruralProducerRepository.plantedCropsItems[0]).toMatchObject({
-      name: 'ALGODAO',
-    })
-    expect(ruralProducerRepository.plantedCropsItems[1]).toMatchObject({
-      name: 'MILHO',
     })
   })
 
   it('should not be able to edit if not found rural producer', async () => {
-    const plantedCropsArray = [PlantedCropsEnum.soja, PlantedCropsEnum.milho]
-
-    const ruralProducer = await ruralProducerRepository.create({
+    const ruralProducer = await ruralProducerRepository.createRuralProducer({
       cpf_or_cnpj: '21859242570',
       producer_name: 'Thomas',
       farm_name: 'Fazendinha',
@@ -65,7 +60,25 @@ describe('Edit Rural Use Case', () => {
       total_area: 4000,
       agricultural_area: 1500,
       vegetation_area: 1500,
-      planted_crops: plantedCropsArray,
+    })
+
+    const plantedCropsObj = [
+      {
+        rural_producer_id: ruralProducer.id,
+        name: PlantedCropsEnum.CAFE,
+      },
+      {
+        rural_producer_id: ruralProducer.id,
+        name: PlantedCropsEnum.MILHO,
+      },
+    ]
+
+    await ruralProducerRepository.createPlantedCrops(plantedCropsObj)
+
+    await sut.execute({
+      ruralProducerId: ruralProducer.id,
+      producerName: 'José',
+      farmName: 'Fazendona',
     })
 
     await expect(() =>

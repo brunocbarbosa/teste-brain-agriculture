@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  bet-api-pg:
+    image: bitnami/postgresql
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRESQL_USERNAME=brainagriculture
+      - POSTGRESQL_PASSWORD=brainagriculture
+      - POSTGRESQL_DATABASE=brainagricultureapi

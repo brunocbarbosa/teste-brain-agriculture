@@ -1,7 +1,16 @@
-export enum PlantedCropsEnum {
-  soja = 'SOJA',
-  milho = 'MILHO',
-  algodao = 'ALGODAO',
-  cafe = 'CAFE',
-  cana_de_acucar = 'CANA_DE_ACUCAR',
+export const PlantedCropsEnum: {
+  SOJA: 'SOJA'
+  MILHO: 'MILHO'
+  ALGODAO: 'ALGODAO'
+  CAFE: 'CAFE'
+  CANA_DE_ACUCAR: 'CANA_DE_ACUCAR'
+} = {
+  SOJA: 'SOJA',
+  MILHO: 'MILHO',
+  ALGODAO: 'ALGODAO',
+  CAFE: 'CAFE',
+  CANA_DE_ACUCAR: 'CANA_DE_ACUCAR',
 }
+
+export type PlantedCropsEnum =
+  (typeof PlantedCropsEnum)[keyof typeof PlantedCropsEnum]

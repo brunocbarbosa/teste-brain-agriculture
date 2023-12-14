@@ -1,6 +1,6 @@
 import { RuralProducerRepository } from '@/repositories/rural-producer-repository'
 import { RuralProducerNotFoundError } from './errors/rural-producer-not-found-error'
-import { PlantedCropsEnum } from '@/utils/planted-crops-enum'
+import { PlantedCrops } from '@/utils/types/planted-crops'
 
 interface editRuralProducerUseCaseRequest {
   ruralProducerId: string
@@ -12,7 +12,7 @@ interface editRuralProducerUseCaseRequest {
   totalArea?: number
   agriculturalArea?: number
   vegetationArea?: number
-  plantedCrops?: PlantedCropsEnum[]
+  plantedCrops?: PlantedCrops[]
 }
 
 interface editRuralProducerUseCaseResponse {}
@@ -49,7 +49,11 @@ export class EditRuralProducerUseCase {
       producerRural.vegetation_area = vegetationArea
     if (plantedCrops !== undefined) producerRural.planted_crops = plantedCrops
 
-    await this.ruralProducerRepository.save(producerRural)
+    await this.ruralProducerRepository.saveRuralProducer(producerRural)
+    await this.ruralProducerRepository.savePlantedCrops(
+      producerRural.planted_crops,
+      ruralProducerId,
+    )
 
     return {}
   }
