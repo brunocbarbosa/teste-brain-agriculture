@@ -1,14 +1,32 @@
 # Teste - Brain Agriculture
 
+## Dependências e Ferramentas
+- fastify
+- Postgres
+- Zod
+- Prisma
+- Dotenv
+- Vitest
+- Supertest
+- Eslint
+- TsNode
+- TSX
+- TSUP
+- Typescript
+- NPM Run All
+- SOLID
+- Docker
+- Github Actions
+
 ## Instruções Iniciais
 
-1.  Utilizar o comando `npm install` para instalar todas as dependencias 
+1.  Utilizar o comando `npm install` para instalar todas as dependências 
 2. Crie o arquivo .env e copie as variáveis de ambiente do arquivo .env_example para o .env
-2.  Instlar o banco de dados com o comando `docker-compose up -d` 
+2.  Instalar o banco de dados com o comando `docker-compose up -d` 
 3.  Após criar o banco de dados rode o comando `npm run prisma:migrate:deploy` para rodar as migrations e criar as tabelas
 4.  Para popular o banco de dados com o comando `npm run prisma:seed`
-5.  Utilize o comando `npm run build` para criar a pasta dist com os arquivos js.
-6 - Para rodar utilize `npm run start`
+5.  Utilize o comando `npm run build` para criar a pasta dist com os arquivos js
+6. Para rodar utilize `npm run start`
 
 ## Comandos Interessantes
 - Com o comando `npm run prisma:studio` poderá ver o banco de dados pelo prisma studio
