@@ -35,8 +35,6 @@ export class EditRuralProducerUseCase {
     const producerRural =
       await this.ruralProducerRepository.findById(ruralProducerId)
 
-    console.log('producerRural: ', producerRural)
-
     if (!producerRural) throw new RuralProducerNotFoundError()
 
     if (cpfOrCnpj !== undefined) producerRural.cpf_or_cnpj = cpfOrCnpj
@@ -50,8 +48,6 @@ export class EditRuralProducerUseCase {
     if (vegetationArea !== undefined)
       producerRural.vegetation_area = vegetationArea
     if (plantedCrops !== undefined) producerRural.planted_crops = plantedCrops
-
-    console.log('producerRuralEdit: ', producerRural)
 
     await this.ruralProducerRepository.saveRuralProducer(producerRural)
     await this.ruralProducerRepository.savePlantedCrops(
