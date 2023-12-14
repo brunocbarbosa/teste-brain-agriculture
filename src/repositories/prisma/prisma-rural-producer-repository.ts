@@ -4,6 +4,14 @@ import { RuralProducerRepository } from '../rural-producer-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaRuralProducerRepository implements RuralProducerRepository {
+  async findAllRuralProducer() {
+    return prisma.ruralProducer.findMany()
+  }
+
+  async findAllPlantedCrops() {
+    return prisma.plantedCrops.findMany()
+  }
+
   async findById(id: string) {
     const teste = await prisma.ruralProducer.findUnique({
       where: {

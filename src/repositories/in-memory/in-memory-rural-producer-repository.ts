@@ -11,6 +11,14 @@ export class InMemoryRuralProducerRepositry implements RuralProducerRepository {
   public items: RuralProducerWithoutPlantedCrops[] = []
   public plantedCropsItems: PlantedCrops[] = []
 
+  async findAllRuralProducer() {
+    return this.items
+  }
+
+  async findAllPlantedCrops() {
+    return this.plantedCropsItems
+  }
+
   async findById(id: string) {
     const ruralProducer = this.items.find((item) => item.id === id)
 

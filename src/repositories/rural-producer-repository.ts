@@ -6,6 +6,8 @@ import {
 import { Prisma } from '@prisma/client'
 
 export interface RuralProducerRepository {
+  findAllRuralProducer(): Promise<RuralProducerWithoutPlantedCrops[] | null>
+  findAllPlantedCrops(): Promise<PlantedCrops[] | null>
   findById(id: string): Promise<RuralProducer | null>
   findByCpfOrCnpj(cpfOrCnpj: string): Promise<RuralProducer | null>
   saveRuralProducer(data: RuralProducerWithoutPlantedCrops): Promise<void>
